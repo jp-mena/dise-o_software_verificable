@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SGA – Inicio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="text-center mb-4">
+            <h1 class="display-4">Sistema de Gestión Académica</h1>
+            <p class="lead">Proyecto ICC5130 – Parte 1</p>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <!-- Alumnos -->
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Alumnos</h5>
+                        <p class="card-text">Registrar, editar, listar y eliminar alumnos.</p>
+                        <a href="/alumnos" class="btn btn-primary mb-2">Ver Alumnos</a>
+                        <a href="/alumnos/nuevo" class="btn btn-success">Agregar Alumno</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profesores -->
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Profesores</h5>
+                        <p class="card-text">Gestiona los profesores del sistema.</p>
+                        <a href="/profesores" class="btn btn-primary mb-2">Ver Profesores</a>
+                        <a href="/profesores/nuevo" class="btn btn-success">Agregar Profesor</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cursos -->
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Cursos</h5>
+                        <p class="card-text">Administrar cursos y sus requisitos.</p>
+                        <a href="/cursos" class="btn btn-primary mb-2">Ver Cursos</a>
+                        <a href="/cursos/nuevo" class="btn btn-success">Agregar Curso</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Puedes agregar más módulos aquí... -->
+
+        </div>
+    </div>
+</body>
+</html>
