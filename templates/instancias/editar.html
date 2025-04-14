@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Editar Instancia{% endblock %}
+{% block content %}
+<h1>Editar Instancia</h1>
+<form method="POST">
+    <div class="mb-3">
+        <label class="form-label">Curso:</label>
+        <select name="curso_id" class="form-select" required>
+            {% for curso in cursos %}
+            <option value="{{ curso[0] }}" {% if curso[0] == instancia[1] %}selected{% endif %}>{{ curso[1] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Año:</label>
+        <input type="number" name="anio" value="{{ instancia[2] }}" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Semestre:</label>
+        <select name="semestre" class="form-select" required>
+            <option value="1" {% if instancia[3] == 1 %}selected{% endif %}>1</option>
+            <option value="2" {% if instancia[3] == 2 %}selected{% endif %}>2</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+    <a href="/instancias" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

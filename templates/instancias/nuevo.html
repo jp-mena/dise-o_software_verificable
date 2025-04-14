@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Nueva Instancia{% endblock %}
+{% block content %}
+<h1>Agregar Instancia</h1>
+<form method="POST">
+    <div class="mb-3">
+        <label class="form-label">Curso:</label>
+        <select name="curso_id" class="form-select" required>
+            {% for curso in cursos %}
+            <option value="{{ curso[0] }}">{{ curso[1] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Año:</label>
+        <input type="number" name="anio" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Semestre:</label>
+        <select name="semestre" class="form-select" required>
+            <option value="1">1</option>
+            <option value="2">2</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">Guardar</button>
+    <a href="/instancias" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

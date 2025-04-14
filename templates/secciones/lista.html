@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Lista de Secciones{% endblock %}
+{% block content %}
+<h1>Secciones por Instancia</h1>
+<a href="/secciones/nuevo" class="btn btn-success mb-3">Agregar Sección</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Curso</th>
+            <th>Año</th>
+            <th>Semestre</th>
+            <th>Sección</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for s in secciones %}
+        <tr>
+            <td>{{ s[1] }}</td>
+            <td>{{ s[2] }}</td>
+            <td>{{ s[3] }}</td>
+            <td>{{ s[4] }}</td>
+            <td>
+                <a href="/secciones/editar/{{ s[0] }}" class="btn btn-primary btn-sm">Editar</a>
+                <a href="/secciones/eliminar/{{ s[0] }}" class="btn btn-danger btn-sm">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

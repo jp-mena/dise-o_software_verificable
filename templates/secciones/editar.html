@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Editar Sección{% endblock %}
+{% block content %}
+<h1>Editar Sección</h1>
+<form method="POST">
+    <div class="mb-3">
+        <label class="form-label">Instancia de Curso:</label>
+        <select name="instancia_id" class="form-select" required>
+            {% for inst in instancias %}
+            <option value="{{ inst[0] }}" {% if inst[0] == seccion[1] %}selected{% endif %}>
+                {{ inst[1] }} - {{ inst[2] }} / Sem {{ inst[3] }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Número de Sección:</label>
+        <input type="number" name="numero" value="{{ seccion[2] }}" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+    <a href="/secciones" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
