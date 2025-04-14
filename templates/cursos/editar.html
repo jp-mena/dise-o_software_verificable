@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Editar Curso{% endblock %}
+{% block content %}
+<h1>Editar Curso</h1>
+<form method="POST" class="mt-3">
+    <div class="mb-3">
+        <label class="form-label">Código:</label>
+        <input type="text" name="codigo" value="{{ curso[1] }}" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Nombre:</label>
+        <input type="text" name="nombre" value="{{ curso[2] }}" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+    <a href="/cursos" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

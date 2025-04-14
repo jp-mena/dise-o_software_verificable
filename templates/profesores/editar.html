@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Editar Profesor{% endblock %}
+{% block content %}
+<h1>Editar Profesor</h1>
+<form method="POST" class="mt-3">
+    <div class="mb-3">
+        <label class="form-label">Nombre:</label>
+        <input type="text" name="nombre" value="{{ profesor[1] }}" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Correo:</label>
+        <input type="email" name="correo" value="{{ profesor[2] }}" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+    <a href="/profesores" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

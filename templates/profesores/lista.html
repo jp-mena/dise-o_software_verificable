@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Lista de Profesores{% endblock %}
+{% block content %}
+<h1>Lista de Profesores</h1>
+<a href="/profesores/nuevo" class="btn btn-success mb-3">Agregar Profesor</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for profe in profesores %}
+        <tr>
+            <td>{{ profe[1] }}</td>
+            <td>{{ profe[2] }}</td>
+            <td>
+                <a href="/profesores/editar/{{ profe[0] }}" class="btn btn-primary btn-sm">Editar</a>
+                <a href="/profesores/eliminar/{{ profe[0] }}" class="btn btn-danger btn-sm">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
