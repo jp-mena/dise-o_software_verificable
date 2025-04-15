@@ -1,96 +1,89 @@
-Sistema de Gestión Académica (SGA)
-----------------------------------
+# Sistema de Gestión Académica – Proyecto ICC5130 (Parte 1)
 
-Proyecto en Flask + MySQL para registrar cursos, profesores, alumnos y evaluaciones. Parte 1 del curso ICC5130 – Diseño de Software Verificable.
+Este sistema web permite administrar alumnos, profesores, cursos, instancias, secciones, inscripciones, evaluaciones y notas. Desarrollado con Flask y MySQL como parte del curso ICC5130.
 
-REQUISITOS
-----------
+---
 
-Antes de empezar, asegúrate de tener instalados:
+## ✅ Requisitos
 
-- Python 3.9 o superior
-- MySQL (cliente y servidor)
-- Git
+- Python 3.10+
+- MySQL Server
+- pip (gestor de paquetes de Python)
 
-Recomendado: usar Linux o WSL si estás en Windows.
+---
 
-INSTALACIÓN Y CONFIGURACIÓN
-----------------------------
+## 🚀 Instrucciones de instalación
 
-1. Clonar el repositorio
+1. **Clonar el repositorio**
 
-    git clone https://github.com/tu-usuario/sga_proyecto.git
-    cd sga_proyecto
+```bash
+git clone https://github.com/tu_usuario/tu_repositorio.git
+cd tu_repositorio
+```
 
-2. Crear y activar entorno virtual
+2. **Crear un entorno virtual**
 
-    python3 -m venv venv
-    source venv/bin/activate
+```bash
+python3 -m venv venv
+source venv/bin/activate   # En Windows: venv\Scripts\activate
+```
 
-3. Instalar dependencias
+3. **Instalar dependencias**
 
-    pip install -r requirements.txt
+```bash
+pip install -r requirements.txt
+```
 
-   Si no tienes un requirements.txt, puedes instalar manualmente:
+4. **Crear la base de datos en MySQL**
 
-    pip install Flask flask-mysqldb
+Abre MySQL y crea la base de datos:
 
-CONFIGURACIÓN DE BASE DE DATOS
--------------------------------
+```sql
+CREATE DATABASE sga_db;
+```
 
-1. Iniciar MySQL
+Luego ejecuta el archivo SQL:
 
-    sudo systemctl start mysql
+```bash
+mysql -u TU_USUARIO -p sga_db < schema.sql
+```
 
-2. Crear la base de datos
+5. **Configurar credenciales en `db_config.py`**
 
-    sudo mysql
+Transforma el archivo `db_config.py.example` a  `db_config.py` y modifica los valores:
 
-    CREATE DATABASE sga_db;
-    EXIT;
+```python
+MYSQL_HOST = 'localhost'
+MYSQL_USER = 'tu_usuario'
+MYSQL_PASSWORD = 'tu_contraseña'
+MYSQL_DB = 'sga_db'
+```
 
-3. Crear las tablas
+6. **Ejecutar la aplicación**
 
-    sudo mysql sga_db < schema.sql
+```bash
+python app.py
+```
 
-CONFIGURAR CONEXIÓN A LA BASE DE DATOS
---------------------------------------
+7. **Abrir en el navegador**
 
-Editar el archivo db_config.py:
+Ir a: [http://localhost:5000](http://localhost:5000)
 
-    MYSQL_HOST = 'localhost'
-    MYSQL_USER = 'root'
-    MYSQL_PASSWORD = ''
-    MYSQL_DB = 'sga_db'
+---
 
-EJECUTAR LA APLICACIÓN
------------------------
+## 📁 Estructura principal
 
-    python app.py
+```
+├── app.py
+├── db_config.py
+├── requirements.txt
+├── schema.sql
+├── /templates/
+│   ├── index.html
+│   ├── base.html
+│   └── (carpetas por entidad)
+└── /static/
+    └── js/
+```
 
-Abrir navegador en http://127.0.0.1:5000
-
-FUNCIONALIDADES DISPONIBLES
----------------------------
-
-- Formulario para registrar alumnos
-- Listado de alumnos
-- CRUD futuros para profesores, cursos y evaluaciones
-
-ARCHIVOS IMPORTANTES
---------------------
-
-- app.py
-- db_config.py
-- schema.sql
-- templates/
-
-NO SUBIR venv/
---------------
-
-.gitignore sugerido:
-
-    venv/
-    __pycache__/
-    *.pyc
-    .env
+---
