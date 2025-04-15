@@ -310,5 +310,346 @@ def eliminar_seccion(id):
     return redirect('/secciones')
 
 
+
+
+
+
+
+
+
+
+
+#------------------------------ Asignaciones de Profesores ------------------------------#
+
+# Ver todas las asignaciones
+@app.route('/asignaciones')
+def listar_asignaciones():
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        SELECT ap.id, c.nombre, i.anio, i.semestre, s.numero, p.nombre
+        FROM asignaciones_profesores ap
+        JOIN secciones s ON ap.seccion_id = s.id
+        JOIN instancias i ON s.instancia_id = i.id
+        JOIN cursos c ON i.curso_id = c.id
+        JOIN profesores p ON ap.profesor_id = p.id
+    """)
+    asignaciones = cur.fetchall()
+    cur.close()
+    return render_template('asignaciones/lista.html', asignaciones=asignaciones)
+
+# Crear nueva asignación
+@app.route('/asignaciones/nuevo', methods=['GET', 'POST'])
+def nueva_asignacion():
+    cur = mysql.connection.cursor()
+    if request.method == 'POST':
+        profesor_id = request.form['profesor_id']
+        seccion_id = request.form['seccion_id']
+        cur.execute("INSERT INTO asignaciones_profesores (seccion_id, profesor_id) VALUES (%s, %s)", (seccion_id, profesor_id))
+        mysql.connection.commit()
+        cur.close()
+        return redirect('/asignaciones')
+    else:
+        cur.execute("SELECT id, nombre FROM profesores")
+        profesores = cur.fetchall()
+        cur.execute("""
+            SELECT s.id, c.nombre, i.anio, i.semestre, s.numero
+            FROM secciones s
+            JOIN instancias i ON s.instancia_id = i.id
+            JOIN cursos c ON i.curso_id = c.id
+        """)
+        secciones = cur.fetchall()
+        cur.close()
+        return render_template('asignaciones/nuevo.html', profesores=profesores, secciones=secciones)
+
+# Editar asignación
+@app.route('/asignaciones/editar/<int:id>', methods=['GET', 'POST'])
+def editar_asignacion(id):
+    cur = mysql.connection.cursor()
+    if request.method == 'POST':
+        profesor_id = request.form['profesor_id']
+        seccion_id = request.form['seccion_id']
+        cur.execute("""
+            UPDATE asignaciones_profesores
+            SET profesor_id = %s, seccion_id = %s
+            WHERE id = %s
+        """, (profesor_id, seccion_id, id))
+        mysql.connection.commit()
+        cur.close()
+        return redirect('/asignaciones')
+    else:
+        cur.execute("SELECT id, nombre FROM profesores")
+        profesores = cur.fetchall()
+        cur.execute("""
+            SELECT s.id, c.nombre, i.anio, i.semestre, s.numero
+            FROM secciones s
+            JOIN instancias i ON s.instancia_id = i.id
+            JOIN cursos c ON i.curso_id = c.id
+        """)
+        secciones = cur.fetchall()
+        cur.execute("SELECT * FROM asignaciones_profesores WHERE id = %s", (id,))
+        asignacion = cur.fetchone()
+        cur.close()
+        return render_template('asignaciones/editar.html', profesores=profesores, secciones=secciones, asignacion=asignacion)
+
+# Eliminar asignación
+@app.route('/asignaciones/eliminar/<int:id>')
+def eliminar_asignacion(id):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM asignaciones_profesores WHERE id = %s", (id,))
+    mysql.connection.commit()
+    cur.close()
+    return redirect('/asignaciones')
+
+
+
+
+
+#------------------------------ Inscripciones ------------------------------#
+
+@app.route('/inscripciones')
+def listar_inscripciones():
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        SELECT i.id, a.nombre, c.nombre, ins.anio, ins.semestre, s.numero
+        FROM inscripciones i
+        JOIN alumnos a ON i.alumno_id = a.id
+        JOIN secciones s ON i.seccion_id = s.id
+        JOIN instancias ins ON s.instancia_id = ins.id
+        JOIN cursos c ON ins.curso_id = c.id
+    """)
+    inscripciones = cur.fetchall()
+    cur.close()
+    return render_template('inscripciones/lista.html', inscripciones=inscripciones)
+
+@app.route('/inscripciones/nuevo', methods=['GET', 'POST'])
+def nueva_inscripcion():
+    cur = mysql.connection.cursor()
+    if request.method == 'POST':
+        alumno_id = request.form['alumno_id']
+        seccion_id = request.form['seccion_id']
+        cur.execute("INSERT INTO inscripciones (seccion_id, alumno_id) VALUES (%s, %s)", (seccion_id, alumno_id))
+        mysql.connection.commit()
+        cur.close()
+        return redirect('/inscripciones')
+    else:
+        cur.execute("SELECT id, nombre FROM alumnos")
+        alumnos = cur.fetchall()
+        cur.execute("""
+            SELECT s.id, c.nombre, i.anio, i.semestre, s.numero
+            FROM secciones s
+            JOIN instancias i ON s.instancia_id = i.id
+            JOIN cursos c ON i.curso_id = c.id
+        """)
+        secciones = cur.fetchall()
+        cur.close()
+        return render_template('inscripciones/nuevo.html', alumnos=alumnos, secciones=secciones)
+
+@app.route('/inscripciones/editar/<int:id>', methods=['GET', 'POST'])
+def editar_inscripcion(id):
+    cur = mysql.connection.cursor()
+    if request.method == 'POST':
+        alumno_id = request.form['alumno_id']
+        seccion_id = request.form['seccion_id']
+        cur.execute("""
+            UPDATE inscripciones
+            SET alumno_id = %s, seccion_id = %s
+            WHERE id = %s
+        """, (alumno_id, seccion_id, id))
+        mysql.connection.commit()
+        cur.close()
+        return redirect('/inscripciones')
+    else:
+        cur.execute("SELECT id, nombre FROM alumnos")
+        alumnos = cur.fetchall()
+        cur.execute("""
+            SELECT s.id, c.nombre, i.anio, i.semestre, s.numero
+            FROM secciones s
+            JOIN instancias i ON s.instancia_id = i.id
+            JOIN cursos c ON i.curso_id = c.id
+        """)
+        secciones = cur.fetchall()
+        cur.execute("SELECT * FROM inscripciones WHERE id = %s", (id,))
+        inscripcion = cur.fetchone()
+        cur.close()
+        return render_template('inscripciones/editar.html', inscripcion=inscripcion, alumnos=alumnos, secciones=secciones)
+
+@app.route('/inscripciones/eliminar/<int:id>')
+def eliminar_inscripcion(id):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM inscripciones WHERE id = %s", (id,))
+    mysql.connection.commit()
+    cur.close()
+    return redirect('/inscripciones')
+
+
+
+
+#------------------------------ Evaluaciones ------------------------------#
+
+@app.route('/evaluaciones')
+def listar_evaluaciones():
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        SELECT e.id, c.nombre, i.anio, i.semestre, s.numero, e.tipo, e.peso, e.es_opcional
+        FROM evaluaciones e
+        JOIN secciones s ON e.seccion_id = s.id
+        JOIN instancias i ON s.instancia_id = i.id
+        JOIN cursos c ON i.curso_id = c.id
+    """)
+    evaluaciones = cur.fetchall()
+    cur.close()
+    return render_template('evaluaciones/lista.html', evaluaciones=evaluaciones)
+
+@app.route('/evaluaciones/nuevo', methods=['GET', 'POST'])
+def nueva_evaluacion():
+    cur = mysql.connection.cursor()
+    if request.method == 'POST':
+        seccion_id = request.form['seccion_id']
+        tipo = request.form['tipo']
+        peso = request.form['peso']
+        es_opcional = 'es_opcional' in request.form
+        cur.execute("""
+            INSERT INTO evaluaciones (seccion_id, tipo, peso, es_opcional)
+            VALUES (%s, %s, %s, %s)
+        """, (seccion_id, tipo, peso, es_opcional))
+        mysql.connection.commit()
+        cur.close()
+        return redirect('/evaluaciones')
+    else:
+        cur.execute("""
+            SELECT s.id, c.nombre, i.anio, i.semestre, s.numero
+            FROM secciones s
+            JOIN instancias i ON s.instancia_id = i.id
+            JOIN cursos c ON i.curso_id = c.id
+        """)
+        secciones = cur.fetchall()
+        cur.close()
+        return render_template('evaluaciones/nuevo.html', secciones=secciones)
+
+@app.route('/evaluaciones/editar/<int:id>', methods=['GET', 'POST'])
+def editar_evaluacion(id):
+    cur = mysql.connection.cursor()
+    if request.method == 'POST':
+        seccion_id = request.form['seccion_id']
+        tipo = request.form['tipo']
+        peso = request.form['peso']
+        es_opcional = 'es_opcional' in request.form
+        cur.execute("""
+            UPDATE evaluaciones
+            SET seccion_id=%s, tipo=%s, peso=%s, es_opcional=%s
+            WHERE id=%s
+        """, (seccion_id, tipo, peso, es_opcional, id))
+        mysql.connection.commit()
+        cur.close()
+        return redirect('/evaluaciones')
+    else:
+        cur.execute("""
+            SELECT s.id, c.nombre, i.anio, i.semestre, s.numero
+            FROM secciones s
+            JOIN instancias i ON s.instancia_id = i.id
+            JOIN cursos c ON i.curso_id = c.id
+        """)
+        secciones = cur.fetchall()
+        cur.execute("SELECT * FROM evaluaciones WHERE id = %s", (id,))
+        evaluacion = cur.fetchone()
+        cur.close()
+        return render_template('evaluaciones/editar.html', evaluacion=evaluacion, secciones=secciones)
+
+@app.route('/evaluaciones/eliminar/<int:id>')
+def eliminar_evaluacion(id):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM evaluaciones WHERE id = %s", (id,))
+    mysql.connection.commit()
+    cur.close()
+    return redirect('/evaluaciones')
+
+
+
+#------------------------------ Notas ------------------------------#
+
+@app.route('/notas')
+def listar_notas():
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        SELECT n.id, a.nombre, c.nombre, i.anio, i.semestre, s.numero, e.tipo, n.nota
+        FROM notas n
+        JOIN alumnos a ON n.alumno_id = a.id
+        JOIN evaluaciones e ON n.evaluacion_id = e.id
+        JOIN secciones s ON e.seccion_id = s.id
+        JOIN instancias i ON s.instancia_id = i.id
+        JOIN cursos c ON i.curso_id = c.id
+    """)
+    notas = cur.fetchall()
+    cur.close()
+    return render_template('notas/lista.html', notas=notas)
+
+@app.route('/notas/nuevo', methods=['GET', 'POST'])
+def nueva_nota():
+    cur = mysql.connection.cursor()
+    if request.method == 'POST':
+        evaluacion_id = request.form['evaluacion_id']
+        alumno_id = request.form['alumno_id']
+        nota = request.form['nota']
+        cur.execute("""
+            INSERT INTO notas (evaluacion_id, alumno_id, nota)
+            VALUES (%s, %s, %s)
+        """, (evaluacion_id, alumno_id, nota))
+        mysql.connection.commit()
+        cur.close()
+        return redirect('/notas')
+    else:
+        cur.execute("SELECT id, nombre FROM alumnos")
+        alumnos = cur.fetchall()
+        cur.execute("""
+            SELECT e.id, c.nombre, i.anio, i.semestre, s.numero, e.tipo
+            FROM evaluaciones e
+            JOIN secciones s ON e.seccion_id = s.id
+            JOIN instancias i ON s.instancia_id = i.id
+            JOIN cursos c ON i.curso_id = c.id
+        """)
+        evaluaciones = cur.fetchall()
+        cur.close()
+        return render_template('notas/nuevo.html', alumnos=alumnos, evaluaciones=evaluaciones)
+
+@app.route('/notas/editar/<int:id>', methods=['GET', 'POST'])
+def editar_nota(id):
+    cur = mysql.connection.cursor()
+    if request.method == 'POST':
+        evaluacion_id = request.form['evaluacion_id']
+        alumno_id = request.form['alumno_id']
+        nota = request.form['nota']
+        cur.execute("""
+            UPDATE notas
+            SET evaluacion_id=%s, alumno_id=%s, nota=%s
+            WHERE id=%s
+        """, (evaluacion_id, alumno_id, nota, id))
+        mysql.connection.commit()
+        cur.close()
+        return redirect('/notas')
+    else:
+        cur.execute("SELECT id, nombre FROM alumnos")
+        alumnos = cur.fetchall()
+        cur.execute("""
+            SELECT e.id, c.nombre, i.anio, i.semestre, s.numero, e.tipo
+            FROM evaluaciones e
+            JOIN secciones s ON e.seccion_id = s.id
+            JOIN instancias i ON s.instancia_id = i.id
+            JOIN cursos c ON i.curso_id = c.id
+        """)
+        evaluaciones = cur.fetchall()
+        cur.execute("SELECT * FROM notas WHERE id = %s", (id,))
+        nota = cur.fetchone()
+        cur.close()
+        return render_template('notas/editar.html', nota=nota, alumnos=alumnos, evaluaciones=evaluaciones)
+
+@app.route('/notas/eliminar/<int:id>')
+def eliminar_nota(id):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM notas WHERE id = %s", (id,))
+    mysql.connection.commit()
+    cur.close()
+    return redirect('/notas')
+
+
 if __name__ == '__main__':
     app.run(debug=True)

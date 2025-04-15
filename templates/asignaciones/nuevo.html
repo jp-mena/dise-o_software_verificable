@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Nueva Asignación{% endblock %}
+{% block content %}
+<h1>Asignar Profesor a Sección</h1>
+<form method="POST">
+    <div class="mb-3">
+        <label class="form-label">Profesor:</label>
+        <select name="profesor_id" class="form-select" required>
+            {% for p in profesores %}
+            <option value="{{ p[0] }}">{{ p[1] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Sección:</label>
+        <select name="seccion_id" class="form-select" required>
+            {% for s in secciones %}
+            <option value="{{ s[0] }}">{{ s[1] }} - {{ s[2] }} / Sem {{ s[3] }} - Sección {{ s[4] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">Asignar</button>
+    <a href="/asignaciones" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

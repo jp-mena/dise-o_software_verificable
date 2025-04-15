@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Nueva Inscripción{% endblock %}
+{% block content %}
+<h1>Inscribir Alumno</h1>
+<form method="POST">
+    <div class="mb-3">
+        <label class="form-label">Alumno:</label>
+        <select name="alumno_id" class="form-select" required>
+            {% for a in alumnos %}
+            <option value="{{ a[0] }}">{{ a[1] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Sección:</label>
+        <select name="seccion_id" class="form-select" required>
+            {% for s in secciones %}
+            <option value="{{ s[0] }}">{{ s[1] }} - {{ s[2] }} / Sem {{ s[3] }} - Sección {{ s[4] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">Inscribir</button>
+    <a href="/inscripciones" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

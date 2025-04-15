@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Editar Inscripción{% endblock %}
+{% block content %}
+<h1>Editar Inscripción</h1>
+<form method="POST">
+    <div class="mb-3">
+        <label class="form-label">Alumno:</label>
+        <select name="alumno_id" class="form-select" required>
+            {% for a in alumnos %}
+            <option value="{{ a[0] }}" {% if a[0] == inscripcion[2] %}selected{% endif %}>{{ a[1] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Sección:</label>
+        <select name="seccion_id" class="form-select" required>
+            {% for s in secciones %}
+            <option value="{{ s[0] }}" {% if s[0] == inscripcion[1] %}selected{% endif %}>
+                {{ s[1] }} - {{ s[2] }} / Sem {{ s[3] }} - Sección {{ s[4] }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+    <a href="/inscripciones" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

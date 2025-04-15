@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Asignaciones de Profesores{% endblock %}
+{% block content %}
+<h1>Asignaciones de Profesores</h1>
+<a href="/asignaciones/nuevo" class="btn btn-success mb-3">Nueva Asignación</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Curso</th>
+            <th>Año</th>
+            <th>Semestre</th>
+            <th>Sección</th>
+            <th>Profesor</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for a in asignaciones %}
+        <tr>
+            <td>{{ a[1] }}</td>
+            <td>{{ a[2] }}</td>
+            <td>{{ a[3] }}</td>
+            <td>{{ a[4] }}</td>
+            <td>{{ a[5] }}</td>
+            <td>
+                <a href="/asignaciones/editar/{{ a[0] }}" class="btn btn-primary btn-sm">Editar</a>
+                <a href="/asignaciones/eliminar/{{ a[0] }}" class="btn btn-danger btn-sm">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
