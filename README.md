@@ -48,7 +48,15 @@ Luego ejecuta el archivo SQL:
 mysql -u TU_USUARIO -p sga_db < schema.sql
 ```
 
-5. **Configurar credenciales en `db_config.py`**
+5. **(Opcional) Poblar la base de datos con datos de ejemplo**
+
+Puedes cargar datos de prueba como alumnos, profesores, cursos, evaluaciones y notas ejecutando:
+
+```bash
+mysql -u TU_USUARIO -p sga_db < populate.sql
+```
+
+6. **Configurar credenciales en `db_config.py`**
 
 Transforma el archivo `db_config.py.example` a  `db_config.py` y modifica los valores:
 
@@ -59,7 +67,7 @@ MYSQL_PASSWORD = 'tu_contraseña'
 MYSQL_DB = 'sga_db'
 ```
 
-6. **Ejecutar la aplicación**
+7. **Ejecutar la aplicación**
 
 ```bash
 python app.py
@@ -78,6 +86,7 @@ Ir a: [http://localhost:5000](http://localhost:5000)
 ├── db_config.py
 ├── requirements.txt
 ├── schema.sql
+├── populate.sql
 ├── /templates/
 │   ├── index.html
 │   ├── base.html
