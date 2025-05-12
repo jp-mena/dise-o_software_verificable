@@ -80,10 +80,15 @@ def editar_alumno(id):
 @app.route('/alumnos/eliminar/<int:id>')
 def eliminar_alumno(id):
     cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM alumnos WHERE id = %s", (id,))
-    mysql.connection.commit()
+    try:
+        cur.execute("DELETE FROM alumnos WHERE id = %s", (id,))
+        mysql.connection.commit()
+    except Exception as e:
+        mysql.connection.rollback()
+        print(f"No se pudo eliminar alumno con ID={id}: {e}")
     cur.close()
     return redirect('/alumnos')
+
 
 
 #------------------------------ Profesores ------------------------------#
@@ -126,10 +131,15 @@ def editar_profesor(id):
 @app.route('/profesores/eliminar/<int:id>')
 def eliminar_profesor(id):
     cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM profesores WHERE id = %s", (id,))
-    mysql.connection.commit()
+    try:
+        cur.execute("DELETE FROM profesores WHERE id = %s", (id,))
+        mysql.connection.commit()
+    except Exception as e:
+        mysql.connection.rollback()
+        print(f"No se pudo eliminar profesor con ID={id}: {e}")
     cur.close()
     return redirect('/profesores')
+
 
 
 #------------------------------ Cursos ------------------------------#
@@ -172,8 +182,12 @@ def editar_curso(id):
 @app.route('/cursos/eliminar/<int:id>')
 def eliminar_curso(id):
     cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM cursos WHERE id = %s", (id,))
-    mysql.connection.commit()
+    try:
+        cur.execute("DELETE FROM cursos WHERE id = %s", (id,))
+        mysql.connection.commit()
+    except Exception as e:
+        mysql.connection.rollback()
+        print(f"No se pudo eliminar curso con ID={id}: {e}")
     cur.close()
     return redirect('/cursos')
 
@@ -241,8 +255,12 @@ def editar_instancia(id):
 @app.route('/instancias/eliminar/<int:id>')
 def eliminar_instancia(id):
     cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM instancias WHERE id = %s", (id,))
-    mysql.connection.commit()
+    try:
+        cur.execute("DELETE FROM instancias WHERE id = %s", (id,))
+        mysql.connection.commit()
+    except Exception as e:
+        mysql.connection.rollback()
+        print(f"No se pudo eliminar instacia con ID={id}: {e}")
     cur.close()
     return redirect('/instancias')
 
@@ -317,8 +335,12 @@ def editar_seccion(id):
 @app.route('/secciones/eliminar/<int:id>')
 def eliminar_seccion(id):
     cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM secciones WHERE id = %s", (id,))
-    mysql.connection.commit()
+    try:
+        cur.execute("DELETE FROM secciones WHERE id = %s", (id,))
+        mysql.connection.commit()
+    except Exception as e:
+        mysql.connection.rollback()
+        print(f"No se pudo eliminar seccion con ID={id}: {e}")
     cur.close()
     return redirect('/secciones')
 
@@ -408,10 +430,15 @@ def editar_asignacion(id):
 @app.route('/asignaciones/eliminar/<int:id>')
 def eliminar_asignacion(id):
     cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM asignaciones_profesores WHERE id = %s", (id,))
-    mysql.connection.commit()
+    try:
+        cur.execute("DELETE FROM asignaciones WHERE id = %s", (id,))
+        mysql.connection.commit()
+    except Exception as e:
+        mysql.connection.rollback()
+        print(f"No se pudo eliminar asignacion con ID={id}: {e}")
     cur.close()
     return redirect('/asignaciones')
+
 
 
 
@@ -489,10 +516,15 @@ def editar_inscripcion(id):
 @app.route('/inscripciones/eliminar/<int:id>')
 def eliminar_inscripcion(id):
     cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM inscripciones WHERE id = %s", (id,))
-    mysql.connection.commit()
+    try:
+        cur.execute("DELETE FROM inscripciones WHERE id = %s", (id,))
+        mysql.connection.commit()
+    except Exception as e:
+        mysql.connection.rollback()
+        print(f"No se pudo eliminar inscripcion con ID={id}: {e}")
     cur.close()
     return redirect('/inscripciones')
+
 
 
 
@@ -571,10 +603,15 @@ def editar_evaluacion(id):
 @app.route('/evaluaciones/eliminar/<int:id>')
 def eliminar_evaluacion(id):
     cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM evaluaciones WHERE id = %s", (id,))
-    mysql.connection.commit()
+    try:
+        cur.execute("DELETE FROM evaluaciones WHERE id = %s", (id,))
+        mysql.connection.commit()
+    except Exception as e:
+        mysql.connection.rollback()
+        print(f"No se pudo eliminar evaluacion con ID={id}: {e}")
     cur.close()
     return redirect('/evaluaciones')
+
 
 
 
@@ -658,10 +695,15 @@ def editar_nota(id):
 @app.route('/notas/eliminar/<int:id>')
 def eliminar_nota(id):
     cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM notas WHERE id = %s", (id,))
-    mysql.connection.commit()
+    try:
+        cur.execute("DELETE FROM notas WHERE id = %s", (id,))
+        mysql.connection.commit()
+    except Exception as e:
+        mysql.connection.rollback()
+        print(f"No se pudo eliminar nota con ID={id}: {e}")
     cur.close()
     return redirect('/notas')
+
 
 
 @app.route('/cursos/carga_masiva', methods=['GET', 'POST'])
@@ -695,7 +737,63 @@ def carga_masiva_cursos():
 
     return render_template('cursos/carga_masiva.html')
 
+@app.route('/profesores/carga_masiva', methods=['GET', 'POST'])
+def carga_masiva_profesores():
+    if request.method == 'POST':
+        file = request.files.get('file')
+        if file and allowed_file(file.filename):
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
+            file.save(filepath)
+            with open(filepath, encoding='utf-8') as f:
+                data = json.load(f)
 
+            cur = mysql.connection.cursor()
+            for prof in data:
+                try:
+                    cur.execute("""
+                        INSERT INTO profesores (id, nombre, correo)
+                        VALUES (%s, %s, %s)
+                    """, (prof['id'], prof['nombre'], prof['correo']))
+                except Exception as e:
+                    print(f"Error profesor {prof['nombre']}: {e}")
+                    continue
+
+            mysql.connection.commit()
+            cur.close()
+            return redirect('/profesores')
+        else:
+            return "Archivo inválido", 400
+
+    return render_template('profesores/carga_masiva.html')
+
+@app.route('/alumnos/carga_masiva', methods=['GET', 'POST'])
+def carga_masiva_alumnos():
+    if request.method == 'POST':
+        file = request.files.get('file')
+        if file and allowed_file(file.filename):
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
+            file.save(filepath)
+            with open(filepath, encoding='utf-8') as f:
+                data = json.load(f)
+
+            cur = mysql.connection.cursor()
+            for alumno in data:
+                try:
+                    cur.execute("""
+                        INSERT INTO alumnos (id, nombre, correo, fecha_ingreso)
+                        VALUES (%s, %s, %s, %s)
+                    """, (alumno['id'], alumno['nombre'], alumno['correo'], alumno['fecha_ingreso']))
+                except Exception as e:
+                    print(f"Error alumno {alumno['nombre']}: {e}")
+                    continue
+
+            mysql.connection.commit()
+            cur.close()
+            return redirect('/alumnos')
+        else:
+            return "Archivo inválido", 400
+
+    return render_template('alumnos/carga_masiva.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
