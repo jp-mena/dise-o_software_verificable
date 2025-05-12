@@ -1,6 +1,10 @@
 from flask import Flask, render_template, request, redirect
 from flask_mysqldb import MySQL
 import db_config
+import os
+import json
+from werkzeug.utils import secure_filename
+
 
 app = Flask(__name__)
 
@@ -11,6 +15,15 @@ app.config['MYSQL_PASSWORD'] = db_config.MYSQL_PASSWORD
 app.config['MYSQL_DB'] = db_config.MYSQL_DB
 
 mysql = MySQL(app)
+
+
+UPLOAD_FOLDER = 'uploads'
+ALLOWED_EXTENSIONS = {'json'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 #------------------------------ Home ------------------------------#
 @app.route('/')
@@ -649,6 +662,39 @@ def eliminar_nota(id):
     mysql.connection.commit()
     cur.close()
     return redirect('/notas')
+
+
+@app.route('/cursos/carga_masiva', methods=['GET', 'POST'])
+def carga_masiva_cursos():
+    if request.method == 'POST':
+        file = request.files.get('file')
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+
+            with open(filepath, encoding='utf-8') as f:
+                data = json.load(f)
+
+            cur = mysql.connection.cursor()
+            for curso in data:
+                try:
+                    cur.execute("""
+                        INSERT INTO cursos (id, codigo, nombre)
+                        VALUES (%s, %s, %s)
+                    """, (curso['id'], curso['codigo'], curso['nombre']))
+                except Exception as e:
+                    print(f"Error en curso {curso['codigo']}: {e}")
+                    continue
+
+            mysql.connection.commit()
+            cur.close()
+            return redirect('/cursos')
+        else:
+            return "Archivo inválido", 400
+
+    return render_template('cursos/carga_masiva.html')
+
 
 
 if __name__ == '__main__':
