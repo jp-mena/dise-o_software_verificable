@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 {% block title %}Lista de Secciones{% endblock %}
 {% block content %}
-<h1>Secciones por Instancia</h1>
+<h1>Lista de Secciones</h1>
 <a href="/secciones/nuevo" class="btn btn-success mb-3">Agregar Sección</a>
+<a href="{{ url_for('carga_masiva_secciones') }}" class="btn btn-primary">Carga masiva de secciones</a>
+
 <table class="table table-striped">
     <thead>
         <tr>

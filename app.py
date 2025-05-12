@@ -795,5 +795,59 @@ def carga_masiva_alumnos():
 
     return render_template('alumnos/carga_masiva.html')
 
+
+@app.route('/instancias/carga_masiva', methods=['GET', 'POST'])
+def carga_masiva_instancias():
+    if request.method == 'POST':
+        file = request.files.get('file')
+        if file and allowed_file(file.filename):
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
+            file.save(filepath)
+            with open(filepath, encoding='utf-8') as f:
+                data = json.load(f)
+            cur = mysql.connection.cursor()
+            for instancia in data:
+                try:
+                    cur.execute("""
+                        INSERT INTO instancias (id, curso_id, anio, semestre)
+                        VALUES (%s, %s, %s, %s)
+                    """, (instancia['id'], instancia['curso_id'], instancia['anio'], instancia['semestre']))
+                except Exception as e:
+                    print(f"Error instancia ID={instancia['id']}: {e}")
+                    continue
+            mysql.connection.commit()
+            cur.close()
+            return redirect('/instancias')
+        else:
+            return "Archivo inválido", 400
+    return render_template('instancias/carga_masiva.html')
+
+
+@app.route('/secciones/carga_masiva', methods=['GET', 'POST'])
+def carga_masiva_secciones():
+    if request.method == 'POST':
+        file = request.files.get('file')
+        if file and allowed_file(file.filename):
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
+            file.save(filepath)
+            with open(filepath, encoding='utf-8') as f:
+                data = json.load(f)
+            cur = mysql.connection.cursor()
+            for seccion in data:
+                try:
+                    cur.execute("""
+                        INSERT INTO secciones (id, instancia_id, numero)
+                        VALUES (%s, %s, %s)
+                    """, (seccion['id'], seccion['instancia_id'], seccion['numero']))
+                except Exception as e:
+                    print(f"Error sección ID={seccion['id']}: {e}")
+                    continue
+            mysql.connection.commit()
+            cur.close()
+            return redirect('/secciones')
+        else:
+            return "Archivo inválido", 400
+    return render_template('secciones/carga_masiva.html')
+
 if __name__ == '__main__':
     app.run(debug=True)

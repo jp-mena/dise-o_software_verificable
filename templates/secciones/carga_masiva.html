@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Carga Masiva de Secciones{% endblock %}
+{% block content %}
+<h1>Cargar Secciones desde JSON</h1>
+<form method="POST" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label class="form-label">Archivo JSON:</label>
+        <input type="file" name="file" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-success">Cargar</button>
+    <a href="/secciones" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

@@ -3,6 +3,7 @@
 {% block content %}
 <h1>Instancias de Cursos</h1>
 <a href="/instancias/nuevo" class="btn btn-success mb-3">Agregar Instancia</a>
+<a href="{{ url_for('carga_masiva_instancias') }}" class="btn btn-primary">Carga masiva de instancias</a>
 <table class="table table-striped">
     <thead>
         <tr>
