@@ -48,15 +48,8 @@ Luego ejecuta el archivo SQL:
 mysql -u TU_USUARIO -p sga_db < schema.sql
 ```
 
-5. **(Opcional) Poblar la base de datos con datos de ejemplo**
 
-Puedes cargar datos de prueba como alumnos, profesores, cursos, evaluaciones y notas ejecutando:
-
-```bash
-mysql -u TU_USUARIO -p sga_db < populate.sql
-```
-
-6. **Configurar credenciales en `db_config.py`**
+5. **Configurar credenciales en `db_config.py`**
 
 Transforma el archivo `db_config.py.example` a  `db_config.py` y modifica los valores:
 
