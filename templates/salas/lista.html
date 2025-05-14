@@ -24,7 +24,7 @@
                     <td>{{ sala[2] }}</td>
                     <td>
                         <a href="{{ url_for('editar_sala', id=sala[0]) }}" class="btn btn-sm btn-warning">Editar</a>
-                        <a href="{{ url_for('eliminar_sala', id=sala[0]) }}" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta sala?')">Eliminar</a>
+                        <a href="{{ url_for('eliminar_sala', id=sala[0]) }}" class="btn btn-sm btn-danger">Eliminar</a>
                     </td>
                 </tr>
             {% endfor %}

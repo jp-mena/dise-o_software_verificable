@@ -1308,20 +1308,19 @@ def editar_sala(id):
     return render_template('salas/editar.html', sala=sala)
 
 
-@app.route('/salas/eliminar/<int:id>')
+@app.route('/salas/eliminar/<int:id>', methods=['POST'])
 def eliminar_sala(id):
     cur = mysql.connection.cursor()
     try:
         cur.execute("DELETE FROM salas WHERE id = %s", (id,))
         mysql.connection.commit()
-        flash("Sala eliminada con éxito.", 'success')
+        flash("Sala eliminada exitosamente", 'success')  # Confirmación de eliminación exitosa
     except Exception as e:
         mysql.connection.rollback()
-        flash(f"Error al eliminar la sala: {e}", 'error')
-    finally:
-        cur.close()
-
+        flash(f"Error al eliminar la sala con ID={id}: {e}", 'danger')  # Si ocurre un error, se muestra un mensaje
+    cur.close()
     return redirect('/salas')
+
 
 @app.route('/salas/carga_masiva', methods=['GET', 'POST'])
 def carga_masiva_salas():
