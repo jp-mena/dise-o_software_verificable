@@ -1,13 +1,24 @@
 {% extends 'base.html' %}
+
 {% block title %}Carga Masiva de Cursos{% endblock %}
+
 {% block content %}
-<h1>Cargar Cursos desde JSON</h1>
+<h1>Carga Masiva de Cursos</h1>
+
+{% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+{% if success %}
+    <div class="alert alert-success">{{ success }}</div>
+{% endif %}
+
 <form method="POST" enctype="multipart/form-data">
     <div class="mb-3">
-        <label for="file" class="form-label">Selecciona un archivo JSON:</label>
-        <input type="file" name="file" class="form-control" required>
+        <label for="file" class="form-label">Seleccionar archivo JSON:</label>
+        <input type="file" name="file" id="file" class="form-control" required>
     </div>
-    <button type="submit" class="btn btn-success">Cargar</button>
+    <button type="submit" class="btn btn-primary">Cargar Cursos</button>
     <a href="/cursos" class="btn btn-secondary">Cancelar</a>
 </form>
 {% endblock %}

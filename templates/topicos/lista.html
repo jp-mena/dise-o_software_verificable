@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Tópicos{% endblock %}
+
+{% block content %}
+<h1>Lista de Tópicos</h1>
+<a href="/topicos/nuevo" class="btn btn-success mb-3">Agregar Tópico</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for topico in topicos %}
+        <tr>
+            <td>{{ topico[0] }}</td>
+            <td>{{ topico[1] }}</td>
+            <td>
+                <a href="/topicos/editar/{{ topico[0] }}" class="btn btn-sm btn-warning">Editar</a>
+                <a href="/topicos/eliminar/{{ topico[0] }}" class="btn btn-sm btn-danger">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Asignación de Tópicos a Secciones{% endblock %}
+
+{% block content %}
+<h1>Asignación de Tópicos a Secciones</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Sección</th>
+            <th>Curso</th>
+            <th>Año</th>
+            <th>Semestre</th>
+            <th>Tópico</th>
+            <th>Porcentaje/Peso</th>
+            <th>Tipo de Evaluación</th> <!-- Nueva columna para el tipo -->
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for asignacion in asignaciones %}
+        <tr>
+            <td>{{ asignacion[0] }}</td>  <!-- Número de la sección -->
+            <td>{{ asignacion[1] }}</td>  <!-- Nombre del curso -->
+            <td>{{ asignacion[2] }}</td>  <!-- Año -->
+            <td>{{ asignacion[3] }}</td>  <!-- Semestre -->
+            <td>{{ asignacion[4] }}</td>  <!-- Nombre del tópico -->
+            <td>{{ asignacion[5] }}{% if asignacion[6] == 'porcentaje' %} %{% endif %}</td>  <!-- Porcentaje o peso, con % si es porcentaje -->
+            <td>{{ asignacion[6] }}</td>  <!-- Tipo de evaluación (porcentaje o peso) -->
+            <td>
+                <a href="/topicos/asignar/editar/{{ asignacion[7] }}" class="btn btn-sm btn-warning">Editar</a>
+                <a href="/topicos/asignar/eliminar/{{ asignacion[7] }}" class="btn btn-sm btn-danger">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="/topicos/asignar" class="btn btn-primary">Asignar Tópico</a>
+{% endblock %}

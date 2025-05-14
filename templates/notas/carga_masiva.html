@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Carga Masiva de Notas{% endblock %}
+
+{% block content %}
+<h1>Carga Masiva de Notas</h1>
+
+{% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+{% if success %}
+    <div class="alert alert-success">{{ success }}</div>
+{% endif %}
+
+<p>Seleccione un archivo JSON con las notas de los alumnos.</p>
+
+<form method="POST" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="file" class="form-label">Archivo JSON</label>
+        <input type="file" class="form-control" id="file" name="file" accept=".json" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Cargar Notas</button>
+</form>
+
+{% endblock %}

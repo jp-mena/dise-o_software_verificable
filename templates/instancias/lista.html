@@ -3,7 +3,7 @@
 {% block content %}
 <h1>Instancias de Cursos</h1>
 <a href="/instancias/nuevo" class="btn btn-success mb-3">Agregar Instancia</a>
-<a href="{{ url_for('carga_masiva_instancias') }}" class="btn btn-primary">Carga masiva de instancias</a>
+<a href="/instancias/carga_masiva" class="btn btn-warning mb-3">Carga masiva de instancias</a>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -20,7 +20,7 @@
             <td>{{ inst[2] }}</td>
             <td>{{ inst[3] }}</td>
             <td>
-                <a href="/instancias/editar/{{ inst[0] }}" class="btn btn-primary btn-sm">Editar</a>
+                <a href="/instancias/editar/{{ inst[0] }}" class="btn btn-sm btn-warning">Editar</a>
                 <a href="/instancias/eliminar/{{ inst[0] }}" class="btn btn-danger btn-sm">Eliminar</a>
             </td>
         </tr>

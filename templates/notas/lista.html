@@ -3,35 +3,38 @@
 {% block content %}
 <h1>Notas</h1>
 <a href="/notas/nuevo" class="btn btn-success mb-3">Nueva Nota</a>
+<a href="/notas/carga_masiva" class="btn btn-warning mb-3">Carga masiva de secciones</a>
+
+
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Alumno</th>
-            <th>Curso</th>
-            <th>Año</th>
-            <th>Semestre</th>
-            <th>Sección</th>
-            <th>Evaluación</th>
-            <th>Nota</th>
-            <th>Acciones</th>
+            <th scope="col">#</th>
+            <th scope="col">Alumno</th>
+            <th scope="col">Curso</th>
+            <th scope="col">Sección</th>
+            <th scope="col">Tópico</th>
+            <th scope="col">Evaluación</th>
+            <th scope="col">Nota</th>
+            <th scope="col">Acciones</th>
         </tr>
     </thead>
     <tbody>
-        {% for n in notas %}
+        {% for nota in notas %}
         <tr>
-            <td>{{ n[1] }}</td>
-            <td>{{ n[2] }}</td>
-            <td>{{ n[3] }}</td>
-            <td>{{ n[4] }}</td>
-            <td>{{ n[5] }}</td>
-            <td>{{ n[6] }}</td>
-            <td>{{ n[7] }}</td>
+            <th scope="row">{{ nota[0] }}</th>
+            <td>{{ nota[1] }}</td>
+            <td>{{ nota[2] }}</td>
+            <td>{{ nota[3] }} - {{ nota[4] }} {{ nota[5] }}</td>
+            <td>{{ nota[6] }} - {{ nota[7] }}</td>
+            <td>{{ nota[8] }}</td>
             <td>
-                <a href="/notas/editar/{{ n[0] }}" class="btn btn-primary btn-sm">Editar</a>
-                <a href="/notas/eliminar/{{ n[0] }}" class="btn btn-danger btn-sm">Eliminar</a>
+                <a href="/notas/editar/{{ nota[0] }}" class="btn btn-warning btn-sm">Editar</a>
+                <a href="/notas/eliminar/{{ nota[0] }}" class="btn btn-danger btn-sm">Eliminar</a>
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+<a href="/notas/nuevo" class="btn btn-success">Agregar Nota</a>
 {% endblock %}

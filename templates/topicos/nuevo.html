@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Nuevo Tópico{% endblock %}
+
+{% block content %}
+<h1>Agregar Nuevo Tópico</h1>
+<form method="POST" class="mt-3">
+    <div class="mb-3">
+        <label class="form-label">Nombre del Tópico:</label>
+        <input type="text" name="nombre" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-success">Guardar</button>
+    <a href="/topicos" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

@@ -5,7 +5,7 @@
 {% block content %}
 <div class="text-center mb-5">
     <h1 class="display-4">Sistema de Gestión Académica</h1>
-    <p class="lead">Proyecto ICC5130 – Parte 1</p>
+    <p class="lead">Proyecto ICC5130 – Parte 2</p>
 </div>
 
 <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -17,6 +17,7 @@
                 <p class="card-text">Registrar, editar, listar y eliminar alumnos.</p>
                 <a href="/alumnos" class="btn btn-primary mb-2">Ver Alumnos</a>
                 <a href="/alumnos/nuevo" class="btn btn-success">Agregar Alumno</a>
+                <a href="/alumnos/carga_masiva" class="btn btn-warning mb-3">Carga Masiva Alumnos (JSON)</a>
             </div>
         </div>
     </div>
@@ -29,6 +30,7 @@
                 <p class="card-text">Gestiona los profesores del sistema.</p>
                 <a href="/profesores" class="btn btn-primary mb-2">Ver Profesores</a>
                 <a href="/profesores/nuevo" class="btn btn-success">Agregar Profesor</a>
+                <a href="/profesores/carga_masiva" class="btn btn-warning mb-3">Carga Masiva Profesores (JSON)</a> 
             </div>
         </div>
     </div>
@@ -41,6 +43,7 @@
                 <p class="card-text">Administrar cursos y sus requisitos.</p>
                 <a href="/cursos" class="btn btn-primary mb-2">Ver Cursos</a>
                 <a href="/cursos/nuevo" class="btn btn-success">Agregar Curso</a>
+                <a href="/cursos/carga_masiva" class="btn btn-warning mb-3">Carga Masiva Cursos(JSON)</a>
             </div>
         </div>
     </div>
@@ -53,6 +56,8 @@
                 <p class="card-text">Gestionar aperturas de cursos por semestre.</p>
                 <a href="/instancias" class="btn btn-primary mb-2">Ver Instancias</a>
                 <a href="/instancias/nuevo" class="btn btn-success">Agregar Instancia</a>
+                <a href="/instancias/carga_masiva" class="btn btn-warning mb-3">Carga masiva de instancias_cursos (JSON)</a>
+
             </div>
         </div>
     </div>
@@ -65,6 +70,7 @@
                 <p class="card-text">Gestionar secciones de cada instancia de curso.</p>
                 <a href="/secciones" class="btn btn-primary mb-2">Ver Secciones</a>
                 <a href="/secciones/nuevo" class="btn btn-success">Agregar Sección</a>
+                <a href="{{ url_for('carga_masiva_secciones') }}" class="btn btn-warning mb-3">instancias_cursos_con_secciones (JSON)</a>
             </div>
         </div>
     </div>
@@ -99,7 +105,29 @@
     </div>
 
 
+    <!-- Tópicos -->
+    <div class="col">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <h5 class="card-title">Tópicos</h5>
+                <p class="card-text">Crear y gestionar tópicos de evaluación.</p>
+                <a href="/topicos" class="btn btn-primary mb-2">Ver Tópicos</a>
+                <a href="/topicos/nuevo" class="btn btn-success">Crear Tópico</a>
+            </div>
+        </div>
+    </div>
 
+    <!-- Asignar Tópicos -->
+    <div class="col">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <h5 class="card-title">Asignar tópicos</h5>
+                <p class="card-text">Asignar tópicos a una sección.</p>
+                <a href="/topicos/asignaciones" class="btn btn-primary mb-2">Ver tópicos por Sección</a>
+                <a href="/topicos/asignar" class="btn btn-success">Nueva asignación</a>
+            </div>
+        </div>
+    </div>
 
         <!-- Evaluaciones -->
     <div class="col">
@@ -122,6 +150,8 @@
                 <p class="card-text">Asignar y editar notas por alumno y evaluación.</p>
                 <a href="/notas" class="btn btn-primary mb-2">Ver Notas</a>
                 <a href="/notas/nuevo" class="btn btn-success">Nueva Nota</a>
+                <a href="/notas/carga_masiva" class="btn btn-warning mb-3">Carga masiva de notas_alumnos (JSON)</a>
+
             </div>
         </div>
     </div>

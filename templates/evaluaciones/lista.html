@@ -1,37 +1,47 @@
 {% extends 'base.html' %}
-{% block title %}Evaluaciones{% endblock %}
+
+{% block title %}Lista de Evaluaciones{% endblock %}
+
 {% block content %}
 <h1>Evaluaciones</h1>
-<a href="/evaluaciones/nuevo" class="btn btn-success mb-3">Nueva Evaluación</a>
+
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Curso</th>
+            <th>Sección</th>
             <th>Año</th>
             <th>Semestre</th>
-            <th>Sección</th>
+            <th>Tópico</th>
+            <th>Valor</th>
             <th>Tipo</th>
-            <th>Peso</th>
-            <th>Opcional</th>
             <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
-        {% for e in evaluaciones %}
+        {% for evaluacion in evaluaciones %}
         <tr>
-            <td>{{ e[1] }}</td>
-            <td>{{ e[2] }}</td>
-            <td>{{ e[3] }}</td>
-            <td>{{ e[4] }}</td>
-            <td>{{ e[5] }}</td>
-            <td>{{ e[6] }}%</td>
-            <td>{% if e[7] %}Sí{% else %}No{% endif %}</td>
+            <td>{{ evaluacion[2] }} - {{ evaluacion[3] }}</td>  <!-- Número de la sección y curso -->
+            <td>{{ evaluacion[4] }}</td>  <!-- Año -->
+            <td>{{ evaluacion[5] }}</td>  <!-- Semestre -->
+            <td>{{ evaluacion[1] }} - {{ evaluacion[6] }}</td>  <!-- Tópico -->
             <td>
-                <a href="/evaluaciones/editar/{{ e[0] }}" class="btn btn-primary btn-sm">Editar</a>
-                <a href="/evaluaciones/eliminar/{{ e[0] }}" class="btn btn-danger btn-sm">Eliminar</a>
+                {% if evaluacion[9] == 'porcentaje' %}
+                    {{ evaluacion[7] }} %
+                {% else %}
+                    {{ evaluacion[7] }}
+                {% endif %}
+            </td>  
+            <td>
+                {{ evaluacion[9] }}
+            </td>  
+            <td>
+                <a href="/evaluaciones/editar/{{ evaluacion[0] }}" class="btn btn-sm btn-warning">Editar</a>
+                <a href="/evaluaciones/eliminar/{{ evaluacion[0] }}" class="btn btn-sm btn-danger">Eliminar</a>
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+<a href="/evaluaciones/nuevo" class="btn btn-primary">Nueva Evaluación</a>
 {% endblock %}

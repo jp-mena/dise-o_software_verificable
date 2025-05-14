@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Editar Tópico{% endblock %}
+
+{% block content %}
+<h1>Editar Tópico</h1>
+<form method="POST" class="mt-3">
+    <div class="mb-3">
+        <label class="form-label">Nombre:</label>
+        <input type="text" name="nombre" class="form-control" value="{{ topico[1] }}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+    <a href="/topicos" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
