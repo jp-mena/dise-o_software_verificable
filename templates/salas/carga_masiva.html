@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Carga Masiva de Salas{% endblock %}
+
+{% block content %}
+<h1>Carga Masiva de Salas</h1>
+
+{% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+{% if success %}
+    <div class="alert alert-success">{{ success }}</div>
+{% endif %}
+
+<form method="POST" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="file" class="form-label">Seleccionar archivo JSON</label>
+        <input type="file" class="form-control" name="file" id="file" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Cargar Salas</button>
+</form>
+{% endblock %}

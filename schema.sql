@@ -1,11 +1,11 @@
--- CURSOS
+
 CREATE TABLE cursos (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     codigo TEXT NOT NULL,
     nombre TEXT NOT NULL
 );
 
--- CURSOS REQUISITO DE OTROS
+
 CREATE TABLE requisitos (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     curso_id BIGINT,
@@ -14,7 +14,7 @@ CREATE TABLE requisitos (
     FOREIGN KEY (requisito_id) REFERENCES cursos(id) ON DELETE CASCADE
 );
 
--- INSTANCIAS DE CURSO
+
 CREATE TABLE instancias (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     curso_id BIGINT,
@@ -23,7 +23,7 @@ CREATE TABLE instancias (
     FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE CASCADE
 );
 
--- SECCIONES
+
 CREATE TABLE secciones (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     instancia_id BIGINT,
@@ -32,14 +32,13 @@ CREATE TABLE secciones (
     FOREIGN KEY (instancia_id) REFERENCES instancias(id) ON DELETE CASCADE
 );
 
--- PROFESORES
+
 CREATE TABLE profesores (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre TEXT NOT NULL,
     correo TEXT NOT NULL
 );
 
--- ALUMNOS
 CREATE TABLE alumnos (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre TEXT NOT NULL,
@@ -47,13 +46,13 @@ CREATE TABLE alumnos (
     fecha_ingreso DATE NOT NULL
 );
 
--- TÓPICOS GENERALES
+
 CREATE TABLE topicos (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre TEXT NOT NULL
 );
 
--- TÓPICOS ASIGNADOS A SECCIÓN
+
 CREATE TABLE topicos_por_seccion (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     topico_id BIGINT,
@@ -63,7 +62,7 @@ CREATE TABLE topicos_por_seccion (
     FOREIGN KEY (seccion_id) REFERENCES secciones(id) ON DELETE CASCADE
 );
 
--- EVALUACIONES DENTRO DE UN TÓPICO POR SECCIÓN
+
 CREATE TABLE evaluaciones (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     topico_seccion_id BIGINT,
@@ -74,7 +73,7 @@ CREATE TABLE evaluaciones (
     FOREIGN KEY (topico_seccion_id) REFERENCES topicos_por_seccion(id) ON DELETE CASCADE
 );
 
--- NOTAS DE EVALUACIONES
+
 CREATE TABLE notas (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     evaluacion_id BIGINT,
@@ -101,3 +100,22 @@ CREATE TABLE inscripciones (
     FOREIGN KEY (seccion_id) REFERENCES secciones(id) ON DELETE CASCADE,
     FOREIGN KEY (alumno_id) REFERENCES alumnos(id) ON DELETE CASCADE
 );
+
+
+CREATE TABLE salas (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nombre TEXT NOT NULL,
+    capacidad INT NOT NULL
+);
+
+CREATE TABLE horarios (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    seccion_id BIGINT,
+    sala_id BIGINT,
+    dia ENUM('lunes', 'martes', 'miércoles', 'jueves', 'viernes'),
+    hora_inicio TIME NOT NULL,
+    hora_fin TIME NOT NULL,
+    FOREIGN KEY (seccion_id) REFERENCES secciones(id) ON DELETE CASCADE,
+    FOREIGN KEY (sala_id) REFERENCES salas(id) ON DELETE CASCADE
+);
+

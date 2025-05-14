@@ -5,6 +5,8 @@ import os
 import json
 from werkzeug.utils import secure_filename
 from decimal import Decimal
+import random
+from datetime import timedelta, time
 
 app = Flask(__name__)
 
@@ -345,16 +347,6 @@ def eliminar_seccion(id):
         print(f"No se pudo eliminar seccion con ID={id}: {e}")
     cur.close()
     return redirect('/secciones')
-
-
-
-
-
-
-
-
-
-
 
 #------------------------------ Asignaciones de Profesores ------------------------------#
 
@@ -1249,6 +1241,192 @@ def eliminar_topico_asignado(id):
     mysql.connection.commit()
     cur.close()
     return redirect('/topicos/asignaciones')
+
+#------------------------------ Salas ------------------------------#
+
+@app.route('/salas')
+def listar_salas():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM salas")
+    salas = cur.fetchall()
+    cur.close()
+    return render_template('salas/lista.html', salas=salas)
+
+
+@app.route('/salas/nuevo', methods=['GET', 'POST'])
+def nueva_sala():
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        capacidad = request.form['capacidad']
+
+        cur = mysql.connection.cursor()
+        try:
+            cur.execute("""
+                INSERT INTO salas (nombre, capacidad)
+                VALUES (%s, %s)
+            """, (nombre, capacidad))
+            mysql.connection.commit()
+            flash("Sala creada con éxito.", 'success')
+        except Exception as e:
+            mysql.connection.rollback()
+            flash(f"Error al crear la sala: {e}", 'error')
+        finally:
+            cur.close()
+
+        return redirect('/salas')
+
+    return render_template('salas/nuevo.html')
+
+
+@app.route('/salas/editar/<int:id>', methods=['GET', 'POST'])
+def editar_sala(id):
+    cur = mysql.connection.cursor()
+
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        capacidad = request.form['capacidad']
+
+        try:
+            cur.execute("""
+                UPDATE salas
+                SET nombre = %s, capacidad = %s
+                WHERE id = %s
+            """, (nombre, capacidad, id))
+            mysql.connection.commit()
+            flash("Sala actualizada con éxito.", 'success')
+        except Exception as e:
+            mysql.connection.rollback()
+            flash(f"Error al actualizar la sala: {e}", 'error')
+        finally:
+            cur.close()
+
+        return redirect('/salas')
+
+    cur.execute("SELECT * FROM salas WHERE id = %s", (id,))
+    sala = cur.fetchone()
+    cur.close()
+    return render_template('salas/editar.html', sala=sala)
+
+
+@app.route('/salas/eliminar/<int:id>')
+def eliminar_sala(id):
+    cur = mysql.connection.cursor()
+    try:
+        cur.execute("DELETE FROM salas WHERE id = %s", (id,))
+        mysql.connection.commit()
+        flash("Sala eliminada con éxito.", 'success')
+    except Exception as e:
+        mysql.connection.rollback()
+        flash(f"Error al eliminar la sala: {e}", 'error')
+    finally:
+        cur.close()
+
+    return redirect('/salas')
+
+@app.route('/salas/carga_masiva', methods=['GET', 'POST'])
+def carga_masiva_salas():
+    if request.method == 'POST':
+        file = request.files.get('file')
+        if file and allowed_file(file.filename):
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
+            file.save(filepath)
+
+            with open(filepath, encoding='utf-8') as f:
+                data = json.load(f)
+
+            cur = mysql.connection.cursor()
+
+            # Cargar las salas del JSON
+            for sala_data in data['salas']:
+                try:
+                    nombre = sala_data['nombre']
+                    capacidad = sala_data['capacidad']
+
+                    # Insertar la sala
+                    cur.execute("""
+                        INSERT INTO salas (id, nombre, capacidad)
+                        VALUES (%s, %s, %s)
+                    """, (sala_data['id'], nombre, capacidad))
+                    mysql.connection.commit()
+
+                except Exception as e:
+                    mysql.connection.rollback()
+                    print(f"Error al insertar la sala {sala_data['nombre']}: {e}")
+                    continue  # Continúa con la siguiente sala si ocurre un error
+
+            mysql.connection.commit()
+            cur.close()
+            flash("Salas cargadas exitosamente", 'success')
+            return redirect('/salas')
+        else:
+            return "Archivo inválido", 400
+
+    return render_template('salas/carga_masiva.html')
+
+
+#------------------------------ Asignar horarios ------------------------------#
+
+
+# Para obtener las secciones y asignarles horarios
+@app.route('/asignar_horarios', methods=['GET'])
+def asignar_horarios():
+    cur = mysql.connection.cursor()
+
+    # Obtener las secciones que no tienen horario asignado
+    cur.execute("""
+        SELECT s.id, s.instancia_id, c.nombre, s.numero, s.modo_evaluacion
+        FROM secciones s
+        JOIN instancias i ON s.instancia_id = i.id
+        JOIN cursos c ON i.curso_id = c.id
+        WHERE s.id NOT IN (SELECT seccion_id FROM horarios)
+    """)
+    secciones = cur.fetchall()
+
+    # Obtener las salas disponibles
+    cur.execute("SELECT id, nombre, capacidad FROM salas")
+    salas = cur.fetchall()
+
+    # Asignar horarios
+    for seccion in secciones:
+        seccion_id = seccion[0]
+        curso_nombre = seccion[2]
+        numero_seccion = seccion[3]
+
+        # Obtener el número de créditos (horas de clase) para este curso
+        cur.execute("""
+            SELECT creditos
+            FROM cursos
+            WHERE nombre = %s
+        """, (curso_nombre,))
+        creditos = cur.fetchone()[0]
+
+        # Generar la cantidad de horas que se necesitan para esta sección
+        horas_requeridas = creditos  # Asumimos que cada crédito es 1 hora de clase
+
+        # Seleccionar una sala con suficiente capacidad
+        sala = random.choice(salas)
+
+        # Generar los horarios posibles
+        horarios_disponibles = [
+            {'dia': 'lunes', 'hora_inicio': time(9, 0), 'hora_fin': time(11, 0)},
+            {'dia': 'martes', 'hora_inicio': time(9, 0), 'hora_fin': time(11, 0)},
+            # Otras combinaciones de horarios
+        ]
+
+        # Asignar horarios a esta sección
+        for horario in horarios_disponibles[:horas_requeridas]:
+            cur.execute("""
+                INSERT INTO horarios (seccion_id, sala_id, dia, hora_inicio, hora_fin)
+                VALUES (%s, %s, %s, %s, %s)
+            """, (seccion_id, sala[0], horario['dia'], horario['hora_inicio'], horario['hora_fin']))
+
+        mysql.connection.commit()
+
+    cur.close()
+    return redirect('/calendario')
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

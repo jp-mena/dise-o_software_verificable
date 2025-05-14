@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Salas{% endblock %}
+
+{% block content %}
+<h1>Lista de Salas</h1>
+<a href="{{ url_for('nueva_sala') }}" class="btn btn-success mb-3">Agregar Nueva Sala</a>
+<a href="/salas/carga_masiva" class="btn btn-warning mb-3">Carga Masiva (JSON)</a> 
+{% if salas %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Capacidad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sala in salas %}
+                <tr>
+                    <td>{{ sala[0] }}</td>
+                    <td>{{ sala[1] }}</td>
+                    <td>{{ sala[2] }}</td>
+                    <td>
+                        <a href="{{ url_for('editar_sala', id=sala[0]) }}" class="btn btn-sm btn-warning">Editar</a>
+                        <a href="{{ url_for('eliminar_sala', id=sala[0]) }}" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta sala?')">Eliminar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No hay salas registradas.</p>
+{% endif %}
+
+
+{% endblock %}
